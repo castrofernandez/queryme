@@ -178,7 +178,7 @@ describe('querystringme', function () {
   });
 
   it('Default values', async function () {
-    await page.goto('http://localhost:9000?first=1');
+    await page.goto('http://localhost:9000?first=1&second=');
     await page.evaluate(() => querystringme.load({ default_values: {
       second: '2',
       third: '3'

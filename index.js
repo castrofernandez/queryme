@@ -115,7 +115,7 @@ var querystringme = (function() {
     for (var key in defaultValues) {
       value = defaultValues[key];
 
-      if (!parameters.hasOwnProperty(key)) {
+      if (!parameters.hasOwnProperty(key) || !parameters[key]) {
         parameters[key] = value;
       }
     }
