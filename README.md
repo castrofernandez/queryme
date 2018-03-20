@@ -1,25 +1,25 @@
-# queryme
+# querystringme
 Library to process querystring parameters
 
 1. Install 
 
 ```
-npm install queryme
+npm install querystringme
 ```
 
 2. Usage
 
 ```
-var queryme = require('queryme');
+var querquerystringmeyme = require('querystringme');
 
 // You can load inital parameters with load()
-queryme.load({
+querystringme.load({
     local_storage: true
 });
 
-queryme.getParameters();
-queryme.getParameter('foo', { force: true });
-queryme.updateParameters({ foo: 'bar', other: 'boo' }, { local_storage: true });
+querystringme.getParameters();
+querystringme.getParameter('foo', { force: true });
+querystringme.updateParameters({ foo: 'bar', other: 'boo' }, { local_storage: true });
 ```
 
 3. Run tests

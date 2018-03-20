@@ -1,5 +1,5 @@
 {
-  "name": "queryme",
+  "name": "querystringme",
   "version": "1.0.0",
   "description": "Library to manage querystring parameters",
   "main": "index.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/castrofernandez/queryme.git"
+    "url": "git+https://github.com/castrofernandez/querystringme.git"
   },
   "author": "Juan Castro Fernández (http://juancastro.es)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/castrofernandez/queryme/issues"
+    "url": "https://github.com/castrofernandez/querystringme/issues"
   },
-  "homepage": "https://github.com/castrofernandez/queryme#readme",
+  "homepage": "https://github.com/castrofernandez/querystringme#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "connect": "^3.6.6",

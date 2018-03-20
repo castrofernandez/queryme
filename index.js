@@ -1,6 +1,6 @@
 'use strict';
 
-var queryme = (function() {
+var querystringme = (function() {
   var parameters = null;
 
   var defaultOptions = {
@@ -38,7 +38,7 @@ var queryme = (function() {
     }
 
     var paramString = generateQueryString(options);
-    var title = 'queryme.updateUrl ' + paramString;
+    var title = 'querystringme.updateUrl ' + paramString;
 
     window.history.pushState(parameters, title, '?' + paramString);
   }
@@ -198,5 +198,5 @@ var queryme = (function() {
 })();
 
 if (typeof module !== 'undefined') {
-  module.exports = queryme;
+  module.exports = querystringme;
 }
