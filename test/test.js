@@ -176,4 +176,16 @@ describe('querystringme', function () {
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
   });
+
+  it('Default values', async function () {
+    await page.goto('http://localhost:9000?first=1');
+    await page.evaluate(() => querystringme.load({ default_values: {
+      second: '2',
+      third: '3'
+    } }));
+    
+    expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
+    expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
+    expect(await page.evaluate(() => querystringme.getParameter('third'))).to.equal('3');
+  });
 });

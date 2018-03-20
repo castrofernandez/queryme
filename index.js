@@ -6,7 +6,8 @@ var querystringme = (function() {
   var defaultOptions = {
     force: false,
     update_url: true,
-    local_storage: false
+    local_storage: false,
+    default_values: {}
   };
 
   var localStorageKey = 'querystringme.parameters';
@@ -88,26 +89,42 @@ var querystringme = (function() {
     return clonedDefaultOptions;
   }
 
-  function getParametersFromUrlAndStorage(options) {
-    var fromStorage = getParametersFromStorage(options);
+  function getParametersFromUrl(options) {
     var queryString = getQueryStringFromUrl();
 
-    if (!queryString) {
-      return parameters;
-    }
+    if (queryString) {
+      queryString = queryString.split('&');
+      var length = queryString.length;
+      var parameter, key;
 
-    queryString = queryString.split('&');
-    var length = queryString.length;
-    var parameter, key;
+      for (var i = 0; i < length; i++) {
+        parameter = queryString[i].split('=');
+        key = parameter[0];
 
-    for (var i = 0; i < length; i++) {
-      parameter = queryString[i].split('=');
-      key = parameter[0];
-
-      if (key && key !== '') {
-        parameters[key] = getParameterValue(parameter);
+        if (key && key !== '') {
+          parameters[key] = getParameterValue(parameter);
+        }
       }
     }
+  }
+
+  function setDefaultValues(options) {
+    var defaultValues = options.default_values;
+    var value;
+
+    for (var key in defaultValues) {
+      value = defaultValues[key];
+
+      if (!parameters.hasOwnProperty(key)) {
+        parameters[key] = value;
+      }
+    }
+  }
+
+  function getParametersFromUrlAndStorage(options) {
+    var fromStorage = getParametersFromStorage(options);
+    getParametersFromUrl(options);
+    setDefaultValues(options);
 
     if (fromStorage) {
       updateUrl(options);
