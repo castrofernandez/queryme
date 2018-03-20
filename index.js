@@ -9,6 +9,8 @@ var querystringme = (function() {
     local_storage: false
   };
 
+  var localStorageKey = 'querystringme.parameters';
+
   /* Aux functions */
 
   function getParameterValue(parameter) {
@@ -122,7 +124,7 @@ var querystringme = (function() {
       return false;
     }
 
-    var storedParameters = window.localStorage.getItem('parameters');
+    var storedParameters = window.localStorage.getItem(localStorageKey);
 
     if (storedParameters) {
       parameters = JSON.parse(storedParameters);
@@ -138,7 +140,7 @@ var querystringme = (function() {
       return;
     }
 
-    window.localStorage.setItem('parameters', JSON.stringify(parameters));
+    window.localStorage.setItem(localStorageKey, JSON.stringify(parameters));
   }
 
   /* Public methods */

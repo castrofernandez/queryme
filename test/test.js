@@ -165,7 +165,7 @@ describe('querystringme', function () {
 
   it('localStorage: load from storage', async function () {
     await page.goto('http://localhost:9000?first=1');
-    await page.evaluate(() => localStorage.setItem('parameters', '{ "second": "2" }'))
+    await page.evaluate(() => localStorage.setItem('querystringme.parameters', '{ "second": "2" }'))
     await page.evaluate(() => querystringme.load({ local_storage: true }));
     
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
