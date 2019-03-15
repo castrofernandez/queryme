@@ -197,7 +197,7 @@ var querystringme = (function() {
     var value;
 
     for (var key in values) {
-      value = values[key] || null;
+      value = toString(values[key].toString()) || null;
 
       parameters[key] = value;
     }
@@ -206,6 +206,12 @@ var querystringme = (function() {
     updateParametersInStorage(options);
 
     return parameters;
+  }
+
+  function toString(value) {
+    return value && value.toString && typeof value.toString === "function"
+      ? value.toString()
+      : value;
   }
 
   return {
