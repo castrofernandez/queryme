@@ -1,7 +1,17 @@
 module.exports = {
-    "extends": "standard",
-    "rules": {
-        "semi": [2, "always"],
-        "space-before-function-paren": ["error", "never"]
-    }
+  'env': {
+    'browser': true,
+    'es6': true,
+  },
+  'extends': 'google',
+  'globals': {
+    'Atomics': 'readonly',
+    'SharedArrayBuffer': 'readonly',
+  },
+  'parserOptions': {
+    'ecmaVersion': 2018,
+    'sourceType': 'module',
+  },
+  'rules': {
+  },
 };
