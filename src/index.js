@@ -1,6 +1,7 @@
 'use strict';
 
 const {Storage} = require('./storage');
+const {History} = require('./history');
 
 const querystringme = (function() {
   const parameters = {};
@@ -38,12 +39,8 @@ const querystringme = (function() {
     const paramString = generateQueryString();
     const title = 'querystringme.updateUrl ' + paramString;
 
-    getHistory().pushState(parameters, title, '?' + paramString);
+    History.push(parameters, title, '?' + paramString);
   };
-
-  const getHistory = () => getHistoryFromWindow(window);
-
-  const getHistoryFromWindow = ({history = {}}) => history;
 
   const generateQueryString = () => {
     return Object.entries(parameters).reduce((result, [key, value]) => {
@@ -51,16 +48,10 @@ const querystringme = (function() {
     }, []).join('&');
   };
 
-  const checkPushStateCompatibility = (options) => {
-    if (!window || !getHistory().pushState) {
-      options.update_url = false;
-    }
-  };
-
   const processOptions = (options = {}) => {
     const clonedDefaultOptions = Object.assign({}, defaultOptions, options);
 
-    checkPushStateCompatibility(clonedDefaultOptions);
+    History.isCompatible(clonedDefaultOptions);
     Storage.isCompatible(clonedDefaultOptions);
 
     return clonedDefaultOptions;
