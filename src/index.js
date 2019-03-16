@@ -3,99 +3,86 @@
 const {Storage} = require('./storage');
 const {History} = require('./history');
 const {Querystring} = require('./querystring');
+const {Options} = require('./options');
 
 const querystringme = (function() {
   const parameters = {};
-
-  let defaultOptions = {
-    force: false,
-    update_url: true,
-    local_storage: false,
-    default_values: {},
-  };
 
   /* Aux functions */
 
   const areParametersEmpty = () => Object.entries(parameters).length === 0;
 
-  const areParametersAlreadyProcessed = (options) => {
-    return !areParametersEmpty() && !options.force;
+  const areParametersAlreadyProcessed = () => {
+    console.log(Options.get());
+    console.log(Options.get('force'));
+    return !areParametersEmpty() && !Options.get('force');
   };
 
-  const updateUrl = (options) => {
-    if (!options.update_url) {
+  const updateUrl = () => {
+    if (!Options.get('update_url')) {
       return;
     }
 
-    const paramString = generateQueryString();
+    const paramString = Querystring.generate(parameters);
     const title = 'querystringme.updateUrl ' + paramString;
 
     History.push(parameters, title, '?' + paramString);
   };
 
-  const generateQueryString = () => {
-    return Object.entries(parameters).reduce((result, [key, value]) => {
-      return [...result, `${key}=${value || ''}`];
-    }, []).join('&');
+  const completeWithMissingDefaultValues = () => {
+    Object.entries(Options.get('default_values'))
+        .forEach(([key, value = '']) => {
+          if (!parameters.hasOwnProperty(key) || !parameters[key]) {
+            parameters[key] = value;
+          }
+        });
   };
 
-  const processOptions = (options = {}) => {
-    const clonedDefaultOptions = Object.assign({}, defaultOptions, options);
-
-    History.isCompatible(clonedDefaultOptions);
-    Storage.isCompatible(clonedDefaultOptions);
-
-    return clonedDefaultOptions;
-  };
-
-  const setDefaultValues = (options) => {
-    Object.entries(options.default_values).forEach(([key, value = '']) => {
-      if (!parameters.hasOwnProperty(key) || !parameters[key]) {
-        parameters[key] = value;
-      }
-    });
-  };
-
-  const getParametersFromUrlAndStorage = (options) => {
-    const fromStorage = Storage.get(options);
+  const processParametersFromUrlAndStorage = () => {
+    const fromStorage = Storage.get(Options.get());
     Object.assign(parameters, fromStorage);
     Object.assign(parameters, Querystring.get());
-    setDefaultValues(options);
+
+    completeWithMissingDefaultValues();
 
     if (Object.keys(fromStorage).length > 0) {
-      updateUrl(options);
-      Storage.update(parameters, options);
+      updateUrl();
+      Storage.update(parameters, Options.get());
     }
+  };
 
+  const getParametersFromUrlAndStorage = () => {
+    processParametersFromUrlAndStorage();
     return parameters;
   };
 
   /* Public methods */
 
   const load = (options) => {
-    defaultOptions = processOptions(options);
-    getParametersFromUrlAndStorage(defaultOptions);
-    updateUrl(defaultOptions);
+    Options.merge(options);
+    console.log(Options.get());
+    processParametersFromUrlAndStorage();
+    updateUrl();
   };
 
   const getParameters = (options) => {
-    options = processOptions(options);
+    Options.merge(options);
 
-    if (areParametersAlreadyProcessed(options)) {
+    if (areParametersAlreadyProcessed()) {
       return parameters;
     }
 
-    return getParametersFromUrlAndStorage(options);
+    return getParametersFromUrlAndStorage();
   };
 
   const getParameter = (key, options) => {
-    options = processOptions(options);
+    Options.merge(options);
 
     if (!key) {
       return null;
     }
 
-    const storedParameters = getParameters(options);
+    const storedParameters = getParameters();
 
     return storedParameters && storedParameters[key]
       ? storedParameters[key]
@@ -103,15 +90,15 @@ const querystringme = (function() {
   };
 
   const updateParameters = (values, options) => {
-    options = processOptions(options);
-    getParameters(options);
+    const compoundOptions = Options.merge(options);
+    getParameters();
 
     Object.entries(values).forEach(([key, value]) => {
       parameters[key] = toString(value) || null;
     }, []);
 
-    updateUrl(options);
-    Storage.update(parameters, options);
+    updateUrl();
+    Storage.update(parameters, compoundOptions);
 
     return parameters;
   };
