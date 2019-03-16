@@ -13,8 +13,6 @@ const querystringme = (function() {
   const areParametersEmpty = () => Object.entries(parameters).length === 0;
 
   const areParametersAlreadyProcessed = () => {
-    console.log(Options.get());
-    console.log(Options.get('force'));
     return !areParametersEmpty() && !Options.get('force');
   };
 
@@ -60,7 +58,6 @@ const querystringme = (function() {
 
   const load = (options) => {
     Options.merge(options);
-    console.log(Options.get());
     processParametersFromUrlAndStorage();
     updateUrl();
   };
