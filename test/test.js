@@ -31,7 +31,7 @@ describe('querystringme', function () {
     expect(await page.evaluate(() => querystringme.getParameters())).to.deep.equal({});
   });
 
-  it('One parameter withou value', async function () {
+  it('One parameter without value', async function () {
     await page.goto('http://localhost:9000?foo');
     
     expect(await page.evaluate(() => querystringme.getParameters())).to.deep.equal({ foo: null });

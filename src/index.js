@@ -1,5 +1,7 @@
 'use strict';
 
+const {Storage} = require('./storage');
+
 const querystringme = (function() {
   const parameters = {};
 
@@ -10,27 +12,18 @@ const querystringme = (function() {
     default_values: {},
   };
 
-  const localStorageKey = 'querystringme.parameters';
-
   /* Aux functions */
 
-  const getParameterValue = (parameter) => {
-    if (parameter.length < 2) {
-      return null;
-    }
-
-    const value = parameter[1];
-
-    return value === '' ? null : value;
-  };
+  const getParameterValue = (value) => value === '' ? null : value;
 
   const areParametersEmpty = () => Object.entries(parameters).length === 0;
 
-  const getQueryStringFromUrl = () => {
-    const url = window.location.href;
-    const parts = url.split('?');
+  const getBrowserUrl = () => window.location.href;
 
-    return parts.length > 1 ? parts[1] : null;
+  const getQueryStringFromUrl = () => {
+    const [, second = ''] = getBrowserUrl().split('?');
+
+    return second;
   };
 
   const areParametersAlreadyProcessed = (options) => {
@@ -42,27 +35,25 @@ const querystringme = (function() {
       return;
     }
 
-    const paramString = generateQueryString(options);
+    const paramString = generateQueryString();
     const title = 'querystringme.updateUrl ' + paramString;
 
-    window.history.pushState(parameters, title, '?' + paramString);
+    getHistory().pushState(parameters, title, '?' + paramString);
   };
 
-  const generateQueryString = (options) => {
+  const getHistory = () => getHistoryFromWindow(window);
+
+  const getHistoryFromWindow = ({history = {}}) => history;
+
+  const generateQueryString = () => {
     return Object.entries(parameters).reduce((result, [key, value]) => {
       return [...result, `${key}=${value || ''}`];
     }, []).join('&');
   };
 
   const checkPushStateCompatibility = (options) => {
-    if (!window || !window.history || !window.history.pushState) {
+    if (!window || !getHistory().pushState) {
       options.update_url = false;
-    }
-  };
-
-  const checkLocalStorageCompatibility = (options) => {
-    if (!window || !window.localStorage) {
-      options.local_storage = false;
     }
   };
 
@@ -70,29 +61,19 @@ const querystringme = (function() {
     const clonedDefaultOptions = Object.assign({}, defaultOptions, options);
 
     checkPushStateCompatibility(clonedDefaultOptions);
-    checkLocalStorageCompatibility(clonedDefaultOptions);
+    Storage.isCompatible(clonedDefaultOptions);
 
     return clonedDefaultOptions;
   };
 
-  const getParametersFromUrl = (options) => {
-    let queryString = getQueryStringFromUrl();
+  const processParametersFromUrl = () => {
+    getQueryStringFromUrl().split('&').forEach((parameter) => {
+      const [key, value = null] = parameter.split('=');
 
-    if (queryString) {
-      queryString = queryString.split('&');
-      const length = queryString.length;
-      let parameter;
-      let key;
-
-      for (let i = 0; i < length; i++) {
-        parameter = queryString[i].split('=');
-        key = parameter[0];
-
-        if (key && key !== '') {
-          parameters[key] = getParameterValue(parameter);
-        }
+      if (key && key !== '') {
+        parameters[key] = getParameterValue(value);
       }
-    }
+    });
   };
 
   const setDefaultValues = (options) => {
@@ -104,40 +85,17 @@ const querystringme = (function() {
   };
 
   const getParametersFromUrlAndStorage = (options) => {
-    const fromStorage = getParametersFromStorage(options);
-    getParametersFromUrl(options);
+    const fromStorage = Storage.get(options);
+    Object.assign(parameters, fromStorage);
+    processParametersFromUrl();
     setDefaultValues(options);
 
-    if (fromStorage) {
+    if (Object.keys(fromStorage).length > 0) {
       updateUrl(options);
-      updateParametersInStorage(options);
+      Storage.update(parameters, options);
     }
 
     return parameters;
-  };
-
-  const getParametersFromStorage = (options) => {
-    if (!options.local_storage) {
-      return false;
-    }
-
-    const storedParameters = window.localStorage.getItem(localStorageKey);
-
-    if (storedParameters) {
-      Object.assign(parameters, JSON.parse(storedParameters));
-
-      return true;
-    }
-
-    return false;
-  };
-
-  const updateParametersInStorage = (options) => {
-    if (!options.local_storage) {
-      return;
-    }
-
-    window.localStorage.setItem(localStorageKey, JSON.stringify(parameters));
   };
 
   /* Public methods */
@@ -181,7 +139,7 @@ const querystringme = (function() {
     }, []);
 
     updateUrl(options);
-    updateParametersInStorage(options);
+    Storage.update(parameters, options);
 
     return parameters;
   };
@@ -200,6 +158,8 @@ const querystringme = (function() {
   };
 })();
 
-if (typeof module !== 'undefined') {
-  module.exports = querystringme;
+export default querystringme;
+
+if (window && typeof window === 'object') {
+  window['querystringme'] = querystringme;
 }
