@@ -2,6 +2,7 @@
 
 const {Storage} = require('./storage');
 const {History} = require('./history');
+const {Querystring} = require('./querystring');
 
 const querystringme = (function() {
   const parameters = {};
@@ -15,17 +16,7 @@ const querystringme = (function() {
 
   /* Aux functions */
 
-  const getParameterValue = (value) => value === '' ? null : value;
-
   const areParametersEmpty = () => Object.entries(parameters).length === 0;
-
-  const getBrowserUrl = () => window.location.href;
-
-  const getQueryStringFromUrl = () => {
-    const [, second = ''] = getBrowserUrl().split('?');
-
-    return second;
-  };
 
   const areParametersAlreadyProcessed = (options) => {
     return !areParametersEmpty() && !options.force;
@@ -57,16 +48,6 @@ const querystringme = (function() {
     return clonedDefaultOptions;
   };
 
-  const processParametersFromUrl = () => {
-    getQueryStringFromUrl().split('&').forEach((parameter) => {
-      const [key, value = null] = parameter.split('=');
-
-      if (key && key !== '') {
-        parameters[key] = getParameterValue(value);
-      }
-    });
-  };
-
   const setDefaultValues = (options) => {
     Object.entries(options.default_values).forEach(([key, value = '']) => {
       if (!parameters.hasOwnProperty(key) || !parameters[key]) {
@@ -78,7 +59,7 @@ const querystringme = (function() {
   const getParametersFromUrlAndStorage = (options) => {
     const fromStorage = Storage.get(options);
     Object.assign(parameters, fromStorage);
-    processParametersFromUrl();
+    Object.assign(parameters, Querystring.get());
     setDefaultValues(options);
 
     if (Object.keys(fromStorage).length > 0) {
