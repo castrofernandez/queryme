@@ -1,17 +1,22 @@
 'use strict';
 
+const {Options} = require('./options');
+
 const getHistoryFromWindow = ({history = {}}) => history;
 
 const getHistory = () => getHistoryFromWindow(window);
 
+const getTitle = (url) => `querystringme.updateUrl ${url}`;
+
+const isCompatible = () => window && getHistory().pushState;
+
+const isEnabled = () => Options.get('update_url') && isCompatible();
+
 const History = {
-  isCompatible: (options) => {
-    if (!window || !getHistory().pushState) {
-      options.update_url = false;
-    }
-  },
-  push: (data, title, url) => {
-    getHistory().pushState(data, title, url);
+  push: (data, url) => {
+    return isEnabled()
+      ? getHistory().pushState(data, getTitle(url), url)
+      : false;
   },
 };
 

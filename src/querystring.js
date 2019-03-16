@@ -24,7 +24,7 @@ const Querystring = {
         : result;
     }, {});
   },
-  generate: (parameters) => {
+  generate: (parameters = {}) => {
     return Object.entries(parameters).reduce((result, [key, value]) => {
       return [...result, `${key}${VALUE_DELIMITER}${value || ''}`];
     }, []).join(PARAM_DELIMITER);
