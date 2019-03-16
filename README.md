@@ -14,12 +14,12 @@ var querquerystringmeyme = require('querystringme');
 
 // You can load inital parameters with load()
 querystringme.load({
-    local_storage: true
+    localStorage: true
 });
 
 querystringme.getParameters();
 querystringme.getParameter('foo', { force: true });
-querystringme.updateParameters({ foo: 'bar', other: 'boo' }, { local_storage: true });
+querystringme.updateParameters({ foo: 'bar', other: 'boo' }, { localStorage: true });
 ```
 
 3. Development
@@ -43,9 +43,9 @@ npm test
 
 All methods receive at least one optional object that can have the following options:
 * force: boolean. When true parses URL every time instead of using stored values. Default: false.
-* update_url: boolean. When true updates browser's URL after each parameter change. Default: true.
-* local_storage: boolean. When true uses localStorage to store parameters and to restore them when the page is loaded. URL parameters overwrite stored values. Default: false.
-* default_values: object. Key-value object to specify default values. Those values are overwritten by browser's URL. If these values are not present in URL they are added. Default: {}.
+* updateUrl: boolean. When true updates browser's URL after each parameter change. Default: true.
+* localStorage: boolean. When true uses localStorage to store parameters and to restore them when the page is loaded. URL parameters overwrite stored values. Default: false.
+* defaultValues: object. Key-value object to specify default values. Those values are overwritten by browser's URL. If these values are not present in URL they are added. Default: {}.
 
 6. List of methods
 

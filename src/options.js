@@ -2,9 +2,9 @@
 
 const defaultOptions = {
   force: false,
-  update_url: true,
-  local_storage: false,
-  default_values: {},
+  updateUrl: true,
+  localStorage: false,
+  defaultValues: {},
 };
 
 const compoundOptions = Object.assign({}, defaultOptions);

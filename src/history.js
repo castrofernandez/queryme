@@ -10,7 +10,7 @@ const getTitle = (url) => `querystringme.updateUrl ${url}`;
 
 const isCompatible = () => window && getHistory().pushState;
 
-const isEnabled = () => Options.get('update_url') && isCompatible();
+const isEnabled = () => Options.get('updateUrl') && isCompatible();
 
 const History = {
   push: (data, url) => {

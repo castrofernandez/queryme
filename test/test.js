@@ -125,7 +125,7 @@ describe('querystringme', function () {
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal(null);
 
-    await page.evaluate(() => querystringme.updateParameters({ second: '2' }, { update_url: false }));
+    await page.evaluate(() => querystringme.updateParameters({ second: '2' }, { updateUrl: false }));
 
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
@@ -135,7 +135,7 @@ describe('querystringme', function () {
 
   it('updateParameter without URL update (set in load())', async function () {
     await page.goto('http://localhost:9000?first=1&second=');
-    await page.evaluate(() => querystringme.load({ update_url: false }));
+    await page.evaluate(() => querystringme.load({ updateUrl: false }));
     
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal(null);
@@ -150,12 +150,12 @@ describe('querystringme', function () {
 
   it('updateParameter without URL update (overwriting load())', async function () {
     await page.goto('http://localhost:9000?first=1&second=');
-    await page.evaluate(() => querystringme.load({ update_url: true }));
+    await page.evaluate(() => querystringme.load({ updateUrl: true }));
     
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal(null);
 
-    await page.evaluate(() => querystringme.updateParameters({ second: '2' }, { update_url: false }));
+    await page.evaluate(() => querystringme.updateParameters({ second: '2' }, { updateUrl: false }));
 
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
@@ -166,20 +166,20 @@ describe('querystringme', function () {
   it('localStorage: load from storage', async function () {
     await page.goto('http://localhost:9000?first=1');
     await page.evaluate(() => localStorage.setItem('querystringme.parameters', '{ "second": "2" }'))
-    await page.evaluate(() => querystringme.load({ local_storage: true }));
+    await page.evaluate(() => querystringme.load({ localStorage: true }));
     
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
 
     await page.goto('http://localhost:9000?first=1');
-    await page.evaluate(() => querystringme.load({ local_storage: true }));
+    await page.evaluate(() => querystringme.load({ localStorage: true }));
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
   });
 
   it('Default values', async function () {
     await page.goto('http://localhost:9000?first=1&second=');
-    await page.evaluate(() => querystringme.load({ default_values: {
+    await page.evaluate(() => querystringme.load({ defaultValues: {
       second: '2',
       third: '3'
     } }));

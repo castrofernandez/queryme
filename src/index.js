@@ -23,7 +23,7 @@ const processParametersFromUrlAndStorage = () => {
   Parameters.update({
     ...Storage.get(),
     ...Querystring.get(),
-    ...Options.get('default_values'),
+    ...Options.get('defaultValues'),
   });
 
   updateUrlAndStore();

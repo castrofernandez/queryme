@@ -12,7 +12,7 @@ const getStorageFromWindow = ({localStorage = {}}) => localStorage;
 
 const isCompatible = () => window && Object.keys(getStorage()).length > 0;
 
-const isEnabled = () => Options.get('local_storage') && isCompatible();
+const isEnabled = () => Options.get('localStorage') && isCompatible();
 
 const Storage = {
   update: (data) => {
