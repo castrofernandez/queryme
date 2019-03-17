@@ -202,16 +202,18 @@ describe('querystringme', function () {
   });
 
   it('Default values with validator', async function () {
-    await page.goto('http://localhost:9000?first=0&second=0');
+    await page.goto('http://localhost:9000?first=0&second=0&fifth=INVALID');
     await page.evaluate(() => querystringme.load({ defaultValues: {
       second: { default: '1', validator: (v) => parseInt(v) !== 0 },
       third: { default: '2', validator: (v) => v === null },
       fourth: { default: '4', validator: (v) => v !== null },
+      fifth: { default: 'VALID', validator: (v) => v !== 'INVALID' }
     } }));
     
     expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('0');
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('1');
     expect(await page.evaluate(() => querystringme.getParameter('third'))).to.equal(null);
     expect(await page.evaluate(() => querystringme.getParameter('fourth'))).to.equal('4');
+    expect(await page.evaluate(() => querystringme.getParameter('fifth'))).to.equal('VALID');
   });
 });
