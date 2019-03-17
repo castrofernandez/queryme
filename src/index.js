@@ -13,18 +13,14 @@ const getQuery = () => '?' + Querystring.generate(Parameters.get());
 const updateStore = () => Storage.update(Parameters.get());
 
 const updateUrlAndStore = () => {
-  if (Storage.size() > 0) {
-    updateUrl();
-    updateStore();
-  }
+  updateUrl();
+  updateStore();
 };
 
 const processParametersFromUrlAndStorage = () => {
-  Parameters.update({
-    ...Storage.get(),
-    ...Querystring.get(),
-    ...Options.get('defaultValues'),
-  });
+  Parameters.update(Options.get('defaultValues'));
+  Parameters.update(Storage.get());
+  Parameters.update(Querystring.get());
 
   updateUrlAndStore();
 };

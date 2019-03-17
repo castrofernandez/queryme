@@ -46,6 +46,18 @@ All methods receive at least one optional object that can have the following opt
 * updateUrl: boolean. When true updates browser's URL after each parameter change. Default: true.
 * localStorage: boolean. When true uses localStorage to store parameters and to restore them when the page is loaded. URL parameters overwrite stored values. Default: false.
 * defaultValues: object. Key-value object to specify default values. Those values are overwritten by browser's URL. If these values are not present in URL they are added. Default: {}.
+    * default: default value.
+    * validator: function to validate value. Default value is assigned when false is returned.
+
+```
+querystringme.load({ 
+    defaultValues: {
+        second: { default: '1', validator: (v) => parseInt(v) !== 0 },
+        third: { default: '2', validator: (v) => v === null },
+        fourth: { default: '4', validator: (v) => v !== null },
+    } 
+});
+```
 
 6. List of methods
 

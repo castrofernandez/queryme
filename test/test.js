@@ -188,4 +188,30 @@ describe('querystringme', function () {
     expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
     expect(await page.evaluate(() => querystringme.getParameter('third'))).to.equal('3');
   });
+
+  it('Default values as objects', async function () {
+    await page.goto('http://localhost:9000?first=1&second=');
+    await page.evaluate(() => querystringme.load({ defaultValues: {
+      second: { default: '2' },
+      third: { other: '3' }
+    } }));
+    
+    expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('1');
+    expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('2');
+    expect(await page.evaluate(() => querystringme.getParameter('third'))).to.equal(null);
+  });
+
+  it('Default values with validator', async function () {
+    await page.goto('http://localhost:9000?first=0&second=0');
+    await page.evaluate(() => querystringme.load({ defaultValues: {
+      second: { default: '1', validator: (v) => parseInt(v) !== 0 },
+      third: { default: '2', validator: (v) => v === null },
+      fourth: { default: '4', validator: (v) => v !== null },
+    } }));
+    
+    expect(await page.evaluate(() => querystringme.getParameter('first'))).to.equal('0');
+    expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('1');
+    expect(await page.evaluate(() => querystringme.getParameter('third'))).to.equal(null);
+    expect(await page.evaluate(() => querystringme.getParameter('fourth'))).to.equal('4');
+  });
 });

@@ -12,7 +12,9 @@ const getFromUrl = () => {
   return second;
 };
 
-const getParameterValue = (value) => value === '' ? null : value;
+const getValue = (value) => value === '' ? null : value;
+
+const getParameterValue = (value) => ({value: getValue(value)});
 
 const Querystring = {
   get: () => {
