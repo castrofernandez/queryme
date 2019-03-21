@@ -216,4 +216,13 @@ describe('querystringme', function () {
     expect(await page.evaluate(() => querystringme.getParameter('fourth'))).to.equal('4');
     expect(await page.evaluate(() => querystringme.getParameter('fifth'))).to.equal('VALID');
   });
+
+  it('Value toString()', async function () {
+    await page.goto('http://localhost:9000?first=1&second=');
+    await page.evaluate(() => querystringme.load({ defaultValues: {
+      second: { default: true }
+    } }));
+    
+    expect(await page.evaluate(() => querystringme.getParameter('second'))).to.equal('true');
+  });
 });
