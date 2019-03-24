@@ -1,6 +1,6 @@
 {
   "name": "querystringme",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Library to manage querystring parameters",
   "main": "lib/index.js",
   "directories": {

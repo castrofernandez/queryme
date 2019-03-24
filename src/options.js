@@ -37,12 +37,12 @@ const getWrongTypeOptions = (options) => {
 
 const validateOptions = (options) => {
   getWrongTypeOptions(options).forEach((diff) => {
-    console.error(`The option "${diff.key}" is expected to be `
+    console.error(`[querystringme] The option "${diff.key}" is expected to be `
       + `"${diff.expected}" but received as "${diff.actual}".`);
   });
 
   getInvalidOptions(options).forEach((diff) => {
-    console.error(`The option "${diff.key}" is not valid.`);
+    console.error(`[querystringme] The option "${diff.key}" is not valid.`);
   });
 };
 
