@@ -33,6 +33,7 @@ This watches files and compiles them
 4. Run tests
 
 ```
+npm run dev
 npm start // or node server.js
 npm test
 ```
