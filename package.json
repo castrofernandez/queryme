@@ -1,6 +1,6 @@
 {
   "name": "querystringme",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Library to manage querystring parameters",
   "main": "lib/index.js",
   "directories": {
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/castrofernandez/querystringme#readme",
   "dependencies": {
-    "compareme": "^1.0.3"
+    "compareme": "^1.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

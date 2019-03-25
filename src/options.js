@@ -11,27 +11,21 @@ const defaultOptions = {
 
 const compoundOptions = Object.assign({}, defaultOptions);
 
-const getDiffOptions = (options) => {
-  return compareme.get(options)
-      .differences.strictly.with(defaultOptions)
-      .differences.filter((diff) => diff.first !== 'undefined');
-};
-
 const getInvalidOptions = (options) => {
-  return getDiffOptions(options)
-      .filter((diff) => diff.second === 'undefined')
+  return compareme.get(defaultOptions)
+      .unexpected.elements.strictly.with(options)
       .map((diff) => ({
         key: diff.index,
       }));
 };
 
 const getWrongTypeOptions = (options) => {
-  return getDiffOptions(options)
-      .filter((diff) => diff.second !== 'undefined')
+  return compareme.get(defaultOptions)
+      .type.differences.strictly.with(options)
       .map((diff) => ({
         key: diff.index,
-        expected: diff.second,
-        actual: diff.first,
+        expected: diff.first,
+        actual: diff.second,
       }));
 };
 

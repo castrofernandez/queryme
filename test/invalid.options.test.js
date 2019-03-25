@@ -24,7 +24,7 @@ describe('options', () => {
     });
 
     expect(console.error.calledOnce).to.be.true;
-    expect(console.error.calledWith('The option "force" is expected to be "boolean"'
+    expect(console.error.calledWith('[querystringme] The option "force" is expected to be "boolean"'
         + ' but received as "string".')).to.be.true;
   });
 
@@ -34,7 +34,7 @@ describe('options', () => {
     });
 
     expect(console.error.calledOnce).to.be.true;
-    expect(console.error.calledWith('The option "something" is not valid.')).to.be.true;
+    expect(console.error.calledWith('[querystringme] The option "something" is not valid.')).to.be.true;
   });
 });
 
